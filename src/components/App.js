@@ -6,9 +6,13 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 // Custom Components
 import Login from './Login'
 import Main from './Main'
+import EditNote from './EditNote'
 
 // Firebase config
 import firebase from './../firebase-config'
+
+// React Navigator
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
 const theme = {
   ...DefaultTheme,
@@ -19,6 +23,18 @@ const theme = {
     accent: '#f1c40f',
   }
 };
+
+const AppNavigator = createStackNavigator(
+  {
+    Home: Main,
+    EditNote: EditNote
+  },
+  {
+    initialRouteName: "Home"
+  }
+);
+
+const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends Component {
   constructor(){
@@ -44,7 +60,7 @@ export default class App extends Component {
     if (this.state.user) {
       return (
         <PaperProvider theme={theme}>
-          <Main/>
+          <AppContainer />
         </PaperProvider>
       )
     }
