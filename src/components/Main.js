@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, ScrollView} from 'react-native';
 
 // React Native Paper
 import { Avatar, Appbar, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -53,6 +53,10 @@ _deleteNote (id) {
     dbref.remove()
   }
 
+_signOut () {
+  firebase.auth().signOut();
+}
+
 _createNewNote = () => {
   const dbref = firebase.database().ref().child(this.state.user.uid)
   const newNote = dbref.push({
@@ -75,12 +79,15 @@ _createNewNote = () => {
       <View>
         <Appbar style={styles.appbar}>
           <Appbar.Action color={'#FFFFFF'} icon="add" onPress={this._createNewNote} />
+          <Appbar.Action color={'#FFFFFF'} icon="delete" onPress={this._signOut} />
           <Avatar.Text size={24} label="GA" />
           <Text style={styles.email}>{this.state.user.email}</Text>
         </Appbar>
+        <ScrollView>
         {this.state.notes !== null && Object.keys(this.state.notes).reverse().map((key)=>{
             return <View  key={key} style={styles.note}><Note delete={this._deleteNote} id={key} note={this.state.notes[key]} navigate={this.props.navigation.navigate}/></View>
           })}
+        </ScrollView>
 
       </View>
     );
@@ -93,7 +100,7 @@ const styles = StyleSheet.create({
   },
   appbar: {
     backgroundColor: '#000000',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   email: {
     color: '#FFFFFF',
